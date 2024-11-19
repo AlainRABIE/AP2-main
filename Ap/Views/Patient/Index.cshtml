@@ -1,0 +1,73 @@
+@model IEnumerable<ASPBookProject.Models.Patient>
+
+@{
+    Layout = "_Layout"; // Assure-toi que le layout est correctement configuré.
+}
+
+<div class="container mt-5">
+    <h1>@ViewData["Title"]</h1>
+    <a href="@Url.Action("AddPatient", "Patient")" class="btn btn-primary mb-3">Ajouter Patient</a>
+    <table class="table table-bordered">
+        <thead class="thead-light">
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Âge</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var patient in Model)
+            {
+                <tr>
+                    <td>@patient.Nom</td>
+                    <td>@patient.Prenom</td>
+                    <td>@patient.Age</td>
+                    <td>
+                        <a href="@Url.Action("Edit", "Patient", new { id = patient.PatientId })"
+                            class="btn btn-warning btn-sm">Modifier</a>
+                        <a href="@Url.Action("Delete", "Patient", new { id = patient.PatientId })"
+                            class="btn btn-danger btn-sm">Supprimer</a>
+                        <a href="@Url.Action("ShowDetail", "Patient", new { id = patient.PatientId })"
+                            class="btn btn-info btn-sm">Détails</a>
+                        <a href="@Url.Action("ShowOrdonnance", "Patient", new { id = patient.PatientId })"
+                            class="btn btn-info btn-sm">Ordonnance</a>
+                    </td>
+                </tr>
+                <div class="modal fade" id="detailsModal-@patient.PatientId" tabindex="-1" role="dialog"
+                    aria-labelledby="detailsModalLabel-@patient.PatientId" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="detailsModalLabel-@patient.PatientId">
+                                    Détails de @patient.Prenom @patient.Nom
+                                </h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p><strong>ID:</strong> @patient.PatientId</p>
+                                <p><strong>Âge:</strong> @patient.Age</p>
+                                <p><strong>Antécédents:</strong>
+                                    @if (patient.Antecedents != null && patient.Antecedents.Any())
+                                    {
+                                    <ul>
+                                            @foreach (var antecedent in patient.Antecedents)
+                                            {
+                                            <li>@antecedent.Nom</li>
+                                            }
+                                    </ul>
+                                    }
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </tbody>
+    </table>
+</div>

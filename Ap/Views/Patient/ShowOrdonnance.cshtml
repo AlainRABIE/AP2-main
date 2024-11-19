@@ -1,0 +1,158 @@
+﻿@model ASPBookProject.ViewModels.ShowOrdonnanceViewModel
+@{
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Ordonnances</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: white;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            background-color: #fff;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #e9ecef;
+        }
+
+        .button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <H4>Ordonnance des</H4>
+        <form asp-action="ShowOrdonnance" method="post">
+            <label for="patientName">Nom du Patient :</label>
+            <input type="text" id="patientName" name="patientName" required />
+            <button type="submit" class="button">Afficher Ordonnances</button>
+        </form>
+
+
+        @if (Model.Ordonnances != null && Model.Ordonnances.Any())
+        {
+           <table>
+    <thead>
+        <tr>
+            <th>Date de Début</th>
+            <th>Date de Fin</th>
+            <th>Pathologie</th>
+            <th>Médicament</th>
+            <th>Medecin</th>
+            <th>Ordonnances N°</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ordonnance in Model.Ordonnances)
+        {
+            <tr>
+                <td>@ordonnance.DateDébut.ToString("yyyy-MM-dd")</td>
+                <td>@ordonnance.DateFin.ToString("yyyy-MM-dd")</td>
+                <td>@ordonnance.Patologie</td>
+                <td>
+                    @if (ordonnance.Medicaments != null && ordonnance.Medicaments.Any())
+                    {
+                        @foreach (var medicament in ordonnance.Medicaments)
+                        {
+                            @medicament.Nom
+                            @if (!medicament.Equals(ordonnance.Medicaments.Last()))
+                            {
+                                @: , 
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <span>Aucun médicament</span>
+                    }
+                </td>
+                <td>@ordonnance.MedecinId</td>
+                <td>@ordonnance.OrdonnanceId</td>
+                <td>
+                    <form asp-action="DownloadOrdonnance" method="post" style="display:inline;">
+                        <input type="hidden" name="ordonnanceId" value="@ordonnance.OrdonnanceId" />
+                        <button type="submit" class="button">Télécharger</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+        }
+        else
+        {
+            <div class="alert">
+                Aucune ordonnance trouvée pour le patient avec l'ID @Model.PatientId.
+            </div>
+        }
+
+        <a href="@Url.Action("Index", "Patient")" class="button">Retour à la liste des patients</a>
+    </div>
+</body>
+
+</html>

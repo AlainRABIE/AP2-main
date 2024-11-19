@@ -1,0 +1,73 @@
+﻿@{
+    Layout = "_Layout";
+}
+@model List<ASPBookProject.Models.Patient>
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Patients</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container my-5">
+        <h2>Liste des Patients</h2>
+
+        <div class="mb-3">
+            <input type="text" id="searchTerm" class="form-control" placeholder="Rechercher un patient..."
+                onkeyup="filterPatients()" />
+        </div>
+
+        <table class="table table-striped" id="patientTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var patient in Model)
+                {
+                    <tr>
+                        <td>@patient.PatientId</td>
+                        <td>@patient.Nom</td>
+                        <td>@patient.Prenom</td>
+                        <td>
+                            <a class="btn btn-primary" asp-action="CreateOrdonnance"
+                                asp-route-patientId="@patient.PatientId">Créer Ordonnance</a>
+                        </td>
+                    </tr>
+                    
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script>
+        function filterPatients() {
+            var input = document.getElementById('searchTerm');
+            var filter = input.value.toLowerCase();
+            var table = document.getElementById('patientTable');
+            var tr = table.getElementsByTagName('tr');
+
+            for (var i = 1; i < tr.length; i++) {
+                var tdNom = tr[i].getElementsByTagName('td')[1];
+                var tdPrenom = tr[i].getElementsByTagName('td')[2];
+                if (tdNom || tdPrenom) {
+                    var nomValue = tdNom.textContent || tdNom.innerText;
+                    var prenomValue = tdPrenom.textContent || tdPrenom.innerText;
+                    tr[i].style.display = nomValue.toLowerCase().indexOf(filter) === 0 || prenomValue.toLowerCase().indexOf(filter) === 0 ? "" : "none"; 
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

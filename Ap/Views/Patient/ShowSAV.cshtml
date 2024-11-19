@@ -1,0 +1,83 @@
+﻿@{
+    Layout = "_Layout";  
+}
+
+<div class="container mt-5">
+    <h1>@ViewData["Title"]</h1>
+        <div class="mb-3">
+            <label for="nom" class="form-label">Nom</label>
+            <input type="text" class="form-control" id="name" name="Nom" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="Email" required>
+        </div>
+        <div class="mb-3">
+            <label for="sujet" class="form-label">Sujet</label>
+            <input type="text" class="form-control" id="sujet" name="Sujet" required>
+        </div>
+        <div class="mb-3">
+            <label for="message" class="form-label">Message</label>
+            <textarea class="form-control" id="message" name="Message" rows="4" required></textarea>
+        </div>
+        <button type="submit" id="button" class="btn btn-primary">Envoyer</button>
+</div>
+
+    <script>
+ 
+$(document).ready(function () {
+    emailjs.init("lo4AhKedFQzMNqU8R");
+
+    function validateEmail(email) {
+      return re.test(email);
+    }
+
+    function sendEmail() {
+      var name = $('#name').val();
+      var email = $('#email').val();
+      var message = $('#message').val();
+
+      if (!validateEmail(email)) {
+        alert("Veuillez entrer une adresse e-mail valide.");
+      }
+
+      var domain = emailParts[emailParts.length - 1];
+
+      if (domain.toLowerCase() !== 'gmail.com') {
+        alert("Veuillez utiliser une adresse e-mail Gmail.");
+        return false; 
+      }
+
+      emailjs.send("service_j0nqbhy", "template_th7wb9a", {
+        from_name: name,
+        reply_to: email,
+        message: message 
+      }).then(function (response) {
+        console.log('E-mail envoyé avec succès !', response);
+        alert('E-mail envoyé avec succès !');
+      }, function (error) {
+        console.log('Erreur lors de l\'envoi de l\'e-mail : ', error);
+        alert('Erreur lors de l\'envoi de l\'e-mail !');
+      });
+
+      return false; 
+    }
+
+    $('.work-request').submit(function (event) {
+      event.preventDefault(); 
+      sendEmail(); 
+    });
+
+    $('.header--cta').click(function () {
+      alert('Bouton "Contact" du header cliqué.');
+    });
+
+    $('.intro--banner .cta').click(function () {
+      alert('Bouton "Contact" de la section d\'introduction cliqué.');
+    });
+
+    $('#button').click(function () {
+      sendEmail(); 
+    });
+  });
+    </script>

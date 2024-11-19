@@ -1,0 +1,61 @@
+﻿@model ASPBookProject.Models.Medecin 
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier le Profil</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 50px;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Modifier votre Profil</h2>
+        <form asp-action="EditProfil" method="post"> 
+            <div class="form-group">
+                <label asp-for="UserName">Nom d'utilisateur</label>
+                <input type="text" class="form-control" asp-for="UserName" required>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email">Email</label>
+                <input type="email" class="form-control" asp-for="Email" required>
+            </div>
+            <div class="form-group">
+                <label asp-for="PhoneNumber">Numéro de téléphone</label>
+                <input type="text" class="form-control" asp-for="PhoneNumber">
+            </div>
+            <div class="form-group">
+                <label asp-for="Identifiant">Identifiant</label>
+                <input type="text" class="form-control" asp-for="Identifiant" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Mot de passe</label>
+                <input type="password" class="form-control" id="password" name="password">
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirmer le mot de passe</label>
+                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
+            </div>
+            <button type="submit" class="btn btn-primary">Confirmer les Modification</button>
+            <a href="/profile" class="btn btn-secondary" style="margin-left: 10px;">Annuler</a>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

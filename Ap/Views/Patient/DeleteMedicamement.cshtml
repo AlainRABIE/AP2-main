@@ -1,0 +1,64 @@
+﻿@model ASPBookProject.Models.Medicament
+@{
+    Layout = "_Layout"; 
+}
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails du Médicament</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1>Détails du Médicament</h1>
+
+        <div class="mb-3">
+            <p><strong>Nom :</strong> @Model.Nom</p>
+            <p><strong>Posologie :</strong> @Model.Posologie</p>
+            <p><strong>Allergie :</strong> @Model.Allergie</p>
+        </div>
+
+        <!-- Bouton pour ouvrir la modal -->
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+            Supprimer le Médicament
+        </button>
+    </div>
+
+    <!-- Modal de confirmation de suppression -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmer la Suppression</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Êtes-vous sûr de vouloir supprimer ce médicament ?</p>
+                    <p><strong>Nom :</strong> @Model.Nom</p>
+                    <p><strong>Posologie :</strong> @Model.Posologie</p>
+                    <p><strong>Allergie :</strong> @Model.Allergie</p>
+                </div>
+                <div class="modal-footer">
+                    <!-- Bouton Annuler pour fermer la modal -->
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+
+                    <!-- Formulaire pour soumettre la suppression -->
+                    <form asp-action="DeleteConfirmed" asp-controller="Medicament" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@Model.MedicamentId" />
+                        <button type="submit" class="btn btn-danger">Confirmer la Suppression</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

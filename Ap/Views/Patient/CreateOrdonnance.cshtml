@@ -1,0 +1,85 @@
+﻿@model ASPBookProject.Models.OrdonnanceViewModel
+
+@{
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Créer une Ordonnance</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Créer une Ordonnance</h1>
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <form asp-action="CreateOrdonnance" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <label for="patientId">Sélectionner le Patient :</label>
+                <select id="patientId" name="PatientId" class="form-control" required>
+                    <option value="">-- Sélectionner un patient --</option>
+                    @foreach (var patient in Model.Patients)
+                    {
+                        <option value="@patient.PatientId">@patient.Nom @patient.Prenom</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group mt-3">
+                <label for="Patologie">Pathologie</label>
+                <input type="text" class="form-control" id="Patologie" name="Patologie" required />
+            </div>
+
+            <div class="form-group">
+                <label for="Date">Date de l'Ordonnance</label>
+                <input type="date" class="form-control" id="Date" name="Date" value="@DateTime.Now.ToString("yyyy-MM-dd")" required />
+            </div>
+
+            <div class="form-group">
+                <label>Sélectionner les Médicaments :</label>
+                @if (Model.Medicaments != null && Model.Medicaments.Any())
+                {
+                    <div class="form-check">
+                        @foreach (var medicament in Model.Medicaments)
+                        {
+                            <input type="checkbox" class="form-check-input" id="medicament_@medicament.MedicamentId" name="SelectedMedicaments[]" value="@medicament.MedicamentId" />
+                            <label class="form-check-label" for="medicament_@medicament.MedicamentId">@medicament.Nom</label><br />
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning">Aucun médicament disponible.</div>
+                }
+                <small class="form-text text-muted">Sélectionnez les médicaments que vous souhaitez prescrire.</small>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Créer Ordonnance</button>
+        </form>
+
+        <a asp-action="Index" class="btn btn-secondary mt-3">Retour</a>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script>
+        $('form').submit(function () {
+            var selectedMedicaments = [];
+            $('input[name="SelectedMedicaments[]"]:checked').each(function () {
+                selectedMedicaments.push($(this).val());
+            });
+
+            $('<input>').attr({
+                type: 'hidden',
+                name: 'SelectedMedicaments',
+                value: JSON.stringify(selectedMedicaments)
+            }).appendTo('form');
+        });
+    </script>
+</body>
+</html>

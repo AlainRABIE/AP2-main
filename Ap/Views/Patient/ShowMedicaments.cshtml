@@ -1,0 +1,111 @@
+﻿@{
+    Layout = "_Layout"; 
+}
+@model IEnumerable<ASPBookProject.Models.Medicament>
+
+<div class="container mt-5">
+    <h1 class="text-center mb-4">@ViewData["Title"]</h1>
+
+    <form class="form-inline justify-content-center mb-4" onsubmit="return false;">
+        <div class="input-group">
+            <input type="text" id="searchTerm" class="form-control" placeholder="Rechercher un médicament..."
+                onkeyup="filterMedicaments()" />
+            <div class="input-group-append">
+            </div>
+        </div>
+    </form>
+
+    <div class="text-right mb-3">
+        <a href="@Url.Action("Add", "Medicament")" class="btn btn-primary">Ajouter Médicament</a>
+    </div>
+
+    <table class="table table-striped table-hover" id="medicamentTable">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Nom</th>
+                <th scope="col">Allergie</th>
+                <th scope="col">Posologie</th>
+                <th scope="col" class="text-center">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var medicament in Model)
+            {
+                <tr>
+                    <td>@medicament.Nom</td>
+                    <td>@medicament.Allergie</td>
+                    <td>@medicament.Posologie</td>
+                    
+                    <td class="text-center">
+                        <a asp-action="Edit" asp-controller="Medicament" asp-route-id="@medicament.MedicamentId"
+                            class="btn btn-primary btn-sm">
+                            <i class="fas fa-edit"></i> Modifier
+                        </a>
+                        <a href="@Url.Action("Delete", "Medicament", new { id = medicament.MedicamentId })"
+                            class="btn btn-danger btn-sm" data-toggle="modal"
+                            data-target="#confirmDeleteModal-@medicament.MedicamentId">
+                            <i class="fas fa-trash-alt"></i> Supprimer
+                        </a>
+                        <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+                            data-target="#detailsModal-@medicament.MedicamentId">
+                            <i class="fas fa-info-circle"></i> Détails
+                        </button>
+                    </td>
+                </tr>
+             
+                <div class="modal fade" id="detailsModal-@medicament.MedicamentId" tabindex="-1" role="dialog"
+                    aria-labelledby="detailsModalLabel-@medicament.MedicamentId" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="detailsModalLabel-@medicament.MedicamentId">Détails de
+                                    @medicament.Nom</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p><strong>ID:</strong> @medicament.MedicamentId</p>
+                                <p><strong>Nom:</strong> @medicament.Nom</p>
+                                <p><strong>Allergie:</strong> @medicament.Allergie</p>
+                                <p><strong>Posologie:</strong> @medicament.Posologie</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="confirmDeleteModal-@medicament.MedicamentId" tabindex="-1" role="dialog"
+                    aria-labelledby="confirmDeleteModalLabel-@medicament.MedicamentId" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="confirmDeleteModalLabel-@medicament.MedicamentId">Confirmer la
+                                    Suppression</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Êtes-vous sûr de vouloir supprimer le médicament <strong>@medicament.Nom</strong> ?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                <form asp-action="Delete" asp-controller="Medicament" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@medicament.MedicamentId" />
+                                    <button type="submit" class="btn btn-danger">Confirmer</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>

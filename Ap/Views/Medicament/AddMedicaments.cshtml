@@ -1,0 +1,53 @@
+﻿@model ASPBookProject.Models.Medicament
+
+@{
+    Layout = "_Layout"; 
+}
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter un Médicament</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1>Ajouter un Médicament</h1>
+
+        <form asp-action="Add" asp-controller="Medicament" method="post">
+            <input asp-for="MedicamentId" type="hidden" value="0" />
+
+            <div class="form-group">
+                <label asp-for="Nom"></label>
+                <input asp-for="Nom" class="form-control" />
+                <span asp-validation-for="Nom" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Posologie"></label>
+                <input asp-for="Posologie" class="form-control" />
+                <span asp-validation-for="Posologie" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Allergie"></label>
+                <input asp-for="Allergie" class="form-control" />
+                <span asp-validation-for="Allergie" class="text-danger"></span>
+            </div>
+
+            <input type="submit" value="Ajouter le Médicament" class="btn btn-primary" />
+            <input type="button" onclick="history.back()" value="Annuler" class="btn btn-secondary" />
+        </form>
+
+        <div asp-validation-summary="All" class="text-danger"></div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

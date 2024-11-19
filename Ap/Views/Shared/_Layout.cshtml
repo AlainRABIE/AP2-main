@@ -1,0 +1,190 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Authorization
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        body.light-mode {
+            background-color: #e9ecef;
+            color: #343a40;
+        }
+
+        .navbar.light-mode {
+            background-color: #0e61fa;
+            border-bottom: 2px solid #0e61fa;
+        }
+
+        footer.light-mode {
+            background-color: #0e61fa;
+            color: #ffffff;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        body.dark-mode {
+            background-color: #343a40;
+            color: #f8f9fa;
+        }
+
+        .navbar.dark-mode {
+            background-color: #495057;
+            border-bottom: 2px solid #343a40;
+        }
+
+        footer.dark-mode {
+            background-color: #495057;
+            color: #f8f9fa;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .navbar-brand,
+        .nav-link {
+            color: #ffffff !important;
+        }
+
+        .nav-link:hover {
+            color: #ffc107 !important;
+        }
+
+        .btn-outline-danger {
+            color: #ffffff;
+            border-color: #0e61fa;
+        }
+
+        .btn-outline-danger:hover {
+            background-color: #0e61fa;
+            color: white;
+        }
+
+        .footer-links a {
+            color: #ffffff;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body class="light-mode">
+    <nav class="navbar navbar-expand-lg light-mode">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Ap2</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-action="Index" asp-controller="Patient">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-action="ShowMedicaments" asp-controller="Patient">Médicament</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-action="ListPatients" asp-controller="Patient">Ordonnance</a>
+                    </li>
+                      <li class="nav-item">
+                        <a class="nav-link" asp-action="EditOrdonnance" asp-controller="Ordonnance">Ordonnance Récente</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-action="EditProfil" asp-controller="Account">Modifier Profil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-action="StatistiquesMédicaments" asp-controller="Medicament">Stat</a>
+                    </li>
+
+
+                </ul>
+                <div class="d-flex align-items-center ms-auto">
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <span class="navbar-text text-white me-3">Bonjour, @User.Identity.Name!</span>
+                    }
+                    <div class="form-check form-switch ms-3">
+
+                        <input class="form-check-input" type="checkbox" id="darkModeToggle">
+                        <label class="form-check-label text-white" for="darkModeToggle">Mode Sombre</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        @RenderBody()
+    </div>
+
+    <footer class="light-mode">
+        <div class="footer-links">
+            <a class="nav-link" asp-action="FAQ" asp-controller="Account">FAQ</a>
+            <a class="nav-link" asp-action="Guide" asp-controller="Account">Guide d'utilisiation</a>
+            <a href="#">Contact</a>
+        </div>
+        <div class="mt-3">
+            <p>&copy; Ap Alain RABIE <br> BTS SIO 2024-2025.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const body = document.body;
+        const navbar = document.querySelector('.navbar');
+        const footer = document.querySelector('footer');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+
+        if (localStorage.getItem('dark-mode') === 'enabled') {
+            enableDarkMode();
+            darkModeToggle.checked = true;
+        }
+
+        function enableDarkMode() {
+            body.classList.add('dark-mode');
+            navbar.classList.add('dark-mode');
+            footer.classList.add('dark-mode');
+            body.classList.remove('light-mode');
+            navbar.classList.remove('light-mode');
+            footer.classList.remove('light-mode');
+            localStorage.setItem('dark-mode', 'enabled');
+        }
+
+        function disableDarkMode() {
+            body.classList.add('light-mode');
+            navbar.classList.add('light-mode');
+            footer.classList.add('light-mode');
+            body.classList.remove('dark-mode');
+            navbar.classList.remove('dark-mode');
+            footer.classList.remove('dark-mode');
+            localStorage.setItem('dark-mode', 'disabled');
+        }
+
+        darkModeToggle.addEventListener('change', function () {
+            if (this.checked) {
+                enableDarkMode();
+            } else {
+                disableDarkMode();
+            }
+        });
+    </script>
+</body>
+
+</html>

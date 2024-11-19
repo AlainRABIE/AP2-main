@@ -1,0 +1,5 @@
+public class MedicamentStatistique
+{
+    public string NomMedicament { get; set; }
+    public int NombreUtilisations { get; set; }
+}

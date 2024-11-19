@@ -1,0 +1,61 @@
+﻿@{
+    Layout = "_Layout"; 
+}
+@model IEnumerable<ASPBookProject.Models.Medicament>
+
+<div class="container mt-5">
+    <h1>@ViewData["Title"]</h1>
+    <a href="@Url.Action("Add", "Medicament")" class="btn btn-primary mb-3">Ajouter Médicament</a>
+    <table class="table table-bordered">
+        <thead class="thead-light">
+            <tr>
+                <th>Nom</th>
+                <th>Allergie</th>
+                <th>Posologie</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var medicament in Model)
+            {
+                <tr>
+                    <td>@medicament.Nom</td>
+                    <td>@medicament.Allergie</td>
+                    <td>@medicament.Posologie</td>
+                    <td>
+                        <a href="@Url.Action("Edit", "Medicament", new { id = medicament.MedicamentId })"
+                            class="btn btn-warning btn-sm">Modifier</a>
+                        <a href="@Url.Action("Delete", "Medicament", new { id = medicament.MedicamentId })"
+                            class="btn btn-danger btn-sm">Supprimer</a>
+                        <a href="@Url.Action("Details", "Medicament", new { id = medicament.MedicamentId })"
+                            class="btn btn-info btn-sm">Détails</a>
+                    </td>
+                </tr>
+                <div class="modal fade" id="detailsModal-@medicament.MedicamentId" tabindex="-1" role="dialog"
+                    aria-labelledby="detailsModalLabel-@medicament.MedicamentId" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="detailsModalLabel-@medicament.MedicamentId">Détails de
+                                    @medicament.Nom</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p><strong>ID:</strong> @medicament.MedicamentId</p>
+                                <p><strong>Allergie:</strong> @medicament.Allergie</p>
+                                <p><strong>Posologie:</strong> @medicament.Posologie</p>
+                                <p><strong>Nom:</strong> @medicament.Nom</p>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </tbody>
+    </table>
+</div>

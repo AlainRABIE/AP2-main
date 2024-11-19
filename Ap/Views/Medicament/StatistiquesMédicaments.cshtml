@@ -1,0 +1,49 @@
+@model List<Medicament>
+
+@{
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistiques des Médicaments</title>
+    <style>
+        /* Style comme dans ton code */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Top 10 des Médicaments les Plus Utilisés</h2>
+        
+        @if (Model != null && Model.Count > 0)
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom du Médicament</th>
+                        <th>Nombre d'Utilisations</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var medicament in Model)
+                    {
+                        <tr>
+                            <td>@medicament.Nom</td>
+                            <td>@medicament.NombreUtilisations</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>Aucun médicament trouvé.</p>
+        }
+
+        <a href="@Url.Action("Index", "Patient")" class="button">Retour à l'accueil</a>
+    </div>
+</body>
+</html>

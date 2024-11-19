@@ -1,0 +1,61 @@
+﻿@model PatientEditViewModel
+@{
+    Layout = "_Layout";
+}
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Détails du Patient</title>
+</head>
+
+<body>
+    <h1>Détails du Patient</h1>
+
+    @if (Model.Patient != null)
+    {
+        <p><strong>Nom:</strong> @Model.Patient.Nom</p>
+        <p><strong>Prénom:</strong> @Model.Patient.Prenom</p>
+        <p><strong>Âge:</strong> @Model.Patient.Age</p>
+    }
+    else
+    {
+        <p>Patient non trouvé.</p>
+    }
+
+    <h2>Antécédents</h2>
+    <ul>
+        @if (Model.Antecedents != null && Model.Antecedents.Any())
+        {
+            foreach (var antecedent in Model.Antecedents)
+            {
+                <li>@antecedent.Nom</li> <!-- Affiche la description de l'antécédent -->
+            }
+        }
+        else
+        {
+            <li>Aucun antécédent disponible.</li>
+        }
+    </ul>
+
+
+    <h2>Incompatibilités</h2>
+    <ul>
+        @if (Model.Incompatibilites != null && Model.Incompatibilites.Any())
+        {
+            foreach (var incompatibilite in Model.Incompatibilites)
+            {
+                <li>@incompatibilite.Interdiction</li> <!-- Affiche la propriété Description -->
+            }
+        }
+        else
+        {
+            <li>Aucune incompatibilité disponible.</li>
+        }
+    </ul>
+
+    <a asp-action="Index" class="btn btn-secondary">Retour</a>
+</body>
+
+</html>
