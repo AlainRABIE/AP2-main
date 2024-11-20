@@ -13,6 +13,5 @@ namespace ASPBookProject.Models
         public List<Medicament> Medicaments { get; set; } = new List<Medicament>();
         public List<Patient> Patients { get; set; } = new List<Patient>();
         public string? MedecinId { get; set; }
-        public List<int> SelectedMedicaments { get; set; } = new List<int>(); // Liste des médicaments sélectionnés
     }
 }

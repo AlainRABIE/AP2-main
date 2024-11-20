@@ -1,5 +1,4 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@using Microsoft.AspNetCore.Authorization
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -101,9 +100,10 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" asp-action="ListPatients" asp-controller="Patient">Ordonnance</a>
+                        
                     </li>
-                      <li class="nav-item">
-                        <a class="nav-link" asp-action="EditOrdonnance" asp-controller="Ordonnance">Ordonnance Récente</a>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Contact" asp-action="Index">SAV</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" asp-action="EditProfil" asp-controller="Account">Modifier Profil</a>

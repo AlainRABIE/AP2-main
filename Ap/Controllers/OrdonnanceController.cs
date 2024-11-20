@@ -138,30 +138,40 @@ namespace ASPBookProject.Controllers
         {
             return _context.Ordonnances.Any(e => e.OrdonnanceId == id);
         }
-
-
         [HttpGet]
         public async Task<IActionResult> EditOrdonnance(int id)
         {
             var ordonnance = await _context.Ordonnances
-                .Include(o => o.Patient) 
-                .Include(o => o.Medecin) 
-                .Include(o => o.Medicaments)
+                .Include(o => o.Patient)
+                .Include(o => o.Medecin)
                 .FirstOrDefaultAsync(o => o.OrdonnanceId == id);
 
             if (ordonnance == null)
             {
-                return NotFound();
+                return NotFound(); // Si l'ordonnance n'existe pas, retourner une page 404
             }
 
-            return View(ordonnance);
+            // Créer un modèle ViewModel pour transmettre les données à la vue
+            var viewModel = new OrdonnanceViewModel
+            {
+                OrdonnanceId = ordonnance.OrdonnanceId,
+                PatientId = ordonnance.PatientId,
+                Patologie = ordonnance.Patologie,
+                DateDébut = ordonnance.DateDébut,
+                DateFin = ordonnance.DateFin,
+                MedecinId = ordonnance.MedecinId,
+                Patients = await _context.Patients.ToListAsync(), // Liste des patients pour le dropdown
+            };
+
+            return View(viewModel);
         }
 
+        // Action POST pour enregistrer les modifications
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditOrdonnance(int id, Ordonnance ordonnance)
+        public async Task<IActionResult> EditOrdonnance(int id, OrdonnanceViewModel viewModel)
         {
-            if (id != ordonnance.OrdonnanceId)
+            if (id != viewModel.OrdonnanceId)
             {
                 return NotFound();
             }
@@ -170,23 +180,40 @@ namespace ASPBookProject.Controllers
             {
                 try
                 {
+                    var ordonnance = await _context.Ordonnances.FindAsync(id);
+                    if (ordonnance == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // Mettre à jour les propriétés de l'ordonnance
+                    ordonnance.PatientId = viewModel.PatientId;
+                    ordonnance.Patologie = viewModel.Patologie;
+                    ordonnance.DateDébut = viewModel.DateDébut;
+                    ordonnance.DateFin = viewModel.DateFin;
+                    ordonnance.MedecinId = viewModel.MedecinId;
+
+                    // Sauvegarder les modifications dans la base de données
                     _context.Update(ordonnance);
                     await _context.SaveChangesAsync();
+
+                    // Rediriger vers la page des ordonnances après modification
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!_context.Ordonnances.Any(o => o.OrdonnanceId == id))
                     {
-                        return NotFound(); 
+                        return NotFound();
                     }
                     else
                     {
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
-            return View(ordonnance);
+            viewModel.Patients = await _context.Patients.ToListAsync();
+            return View(viewModel);
         }
     }
 }

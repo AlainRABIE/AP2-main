@@ -7,7 +7,6 @@ public class Medicament
     public required string Nom { get; set; }
     public string? Posologie { get; set; }
     public int NombreUtilisations { get; set; }
-
     public List<Antecedent> Antecedents { get; set; } = new();
     public List<Ordonnance> Ordonnances { get; set; } = new();
 }

@@ -28,7 +28,7 @@ namespace ASPBookProject.Controllers
                 Nom = string.Empty,
                 Allergie = string.Empty
             };
-            return View("AddMedicaments", medicament);
+            return View("AddMedicaments");
         }
 
 
@@ -72,8 +72,10 @@ namespace ASPBookProject.Controllers
                 return NotFound();
             }
 
-            return View("EditMedicament", "Patient");
+            return View("EditMedicament", medicament);
         }
+
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -86,14 +88,14 @@ namespace ASPBookProject.Controllers
 
             if (!ModelState.IsValid)
             {
-                return View("EditMedicament", medicament);
+                return View("EditMedicament", "Patient");
             }
 
             try
             {
                 _context.Entry(medicament).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("ShowMedicaments", "Patient");
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -150,15 +152,15 @@ namespace ASPBookProject.Controllers
         {
             var statistiques = await _context.Ordonnances
                 .Where(o => o.Medicaments.Any())
-                .SelectMany(o => o.Medicaments) 
-                .GroupBy(m => m.Nom)            
+                .SelectMany(o => o.Medicaments)
+                .GroupBy(m => m.Nom)
                 .Select(g => new Medicament
                 {
                     Allergie = g.Key,
                     Nom = g.Key,
-                    NombreUtilisations = g.Count() 
+                    NombreUtilisations = g.Count()
                 })
-                .OrderByDescending(m => m.NombreUtilisations) 
+                .OrderByDescending(m => m.NombreUtilisations)
                 .ToListAsync();
 
             if (statistiques.Count == 0)
@@ -173,9 +175,18 @@ namespace ASPBookProject.Controllers
                 }
             }
 
-            return View(statistiques); 
+            return View(statistiques);
         }
 
-
+        public async Task<bool> IsAsthmePatient(string medicamentAllergie)
+        {
+            var medicament = await _context.Medicaments
+                                           .FirstOrDefaultAsync(m => m.Allergie.Contains(medicamentAllergie));
+            if (medicament != null && medicament.Allergie.Contains("asthme"))
+            {
+                return true;
+            }
+            return false; 
+        }
     }
 }

@@ -1,51 +1,29 @@
-﻿@{
-    Layout = "_Layout";  
+﻿@model ASPBookProject.Models.Medicament
+@{
+    Layout = "_Layout";
 }
+<h2>Modifier un Médicament</h2>
 
-@model ASPBookProject.Models.Medicament
+<form asp-action="Edit" asp-controller="Medicament" method="post">
+    <input type="hidden" asp-for="MedicamentId" />
 
-<!DOCTYPE html>
-<html lang="fr">
+    <div>
+        <label asp-for="Nom"></label>
+        <input asp-for="Nom" />
+        <span asp-validation-for="Nom"></span>
+    </div>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modifier le Médicament</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
+    <div>
+        <label asp-for="Allergie"></label>
+        <input asp-for="Allergie" />
+        <span asp-validation-for="Allergie"></span>
+    </div>
 
-<body>
-    <h1>Modifier le Médicament</h1>
+    <div>
+        <label asp-for="Posologie"></label>
+        <input asp-for="Posologie" />
+        <span asp-validation-for="Posologie"></span>
+    </div>
 
-    <form asp-action="Edit" asp-controller="Medicament" method="post">
-
-        <input asp-for="MedicamentId" type="hidden" />
-
-        <div class="form-group">
-            <label asp-for="Nom"></label>
-            <input asp-for="Nom" class="form-control" />
-            <span asp-validation-for="Nom" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="Posologie"></label>
-            <input asp-for="Posologie" class="form-control" />
-            <span asp-validation-for="Posologie" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="Allergie"></label>
-            <input asp-for="Allergie" class="form-control" />
-            <span asp-validation-for="Allergie" class="text-danger"></span>
-        </div>
-
-        <input type="submit" value="Enregistrer les modifications" class="btn btn-primary" />
-        <input type="button" onclick="history.back()" value="Annuler" class="btn btn-secondary" />
-    </form>
-
-    <div asp-validation-summary="All" class="text-danger"></div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+    <button type="submit">Enregistrer</button>
+</form>

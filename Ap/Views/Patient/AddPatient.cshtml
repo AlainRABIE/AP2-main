@@ -1,9 +1,7 @@
 ﻿@model PatientEditViewModel
-
 @{
     Layout = "_Layout";
 }
-
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -15,86 +13,35 @@
 </head>
 
 <body>
-    <div class="container mt-4">
-        <h1>Ajouter un Patient</h1>
+    <h1>Ajouter un Patient</h1>
 
-        <form asp-action="AddPatient" asp-controller="Patient" method="post">
+    <form asp-action="AddPatient" asp-controller="Patient" method="post">
 
-            <input asp-for="Patient.PatientId" type="hidden" value="0" />
+        <input asp-for="Patient.PatientId" type="hidden" value="0" />
+        <div class="form-group">
+            <label asp-for="Patient.Age"></label>
+            <input asp-for="Patient.Age" class="form-control" />
+            <span asp-validation-for="Patient.Age" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="Patient.Age" class="form-label"></label>
-                <input asp-for="Patient.Age" class="form-control" />
-                <span asp-validation-for="Patient.Age" class="text-danger"></span>
-            </div>
+        <div class="form-group">
+            <label asp-for="Patient.Prenom"></label>
+            <input asp-for="Patient.Prenom" class="form-control" />
+            <span asp-validation-for="Patient.Prenom" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="Patient.Prenom" class="form-label"></label>
-                <input asp-for="Patient.Prenom" class="form-control" />
-                <span asp-validation-for="Patient.Prenom" class="text-danger"></span>
-            </div>
+        <div class="form-group">
+            <label asp-for="Patient.Nom"></label>
+            <input asp-for="Patient.Nom" class="form-control" />
+            <span asp-validation-for="Patient.Nom" class="text-danger"></span>
+            <span asp-validation-for="Patient.Antecedents" class="text-danger"></span>
+            <span asp-validation-for="Patient.Ordonnance" class="text-danger"></span>
+        </div>
+        <input type="submit" value="Ajouter le Patient" class="btn btn-primary" />
+        <input type="button" onclick="history.back()" value="Annuler" class="btn btn-secondary" />
+    </form>
 
-            <div class="form-group">
-                <label asp-for="Patient.Nom" class="form-label"></label>
-                <input asp-for="Patient.Nom" class="form-control" />
-                <span asp-validation-for="Patient.Nom" class="text-danger"></span>
-            </div>
-
-            <!-- Section Antécédents -->
-            @if (Model.Antecedents != null && Model.Antecedents.Any())
-            {
-                <div class="form-group">
-                    <label for="antecedents">Antécédents</label>
-                    @foreach (var antecedent in Model.Antecedents)
-                    {
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="@antecedent.AntecedentId"
-                                id="antecedent_@antecedent.AntecedentId" name="SelectedAntecedentIds" />
-                            <label class="form-check-label" for="antecedent_@antecedent.AntecedentId">
-                                @antecedent.Nom
-                            </label>
-                        </div>
-                    }
-                </div>
-            }
-            else
-            {
-                <p>Aucun antécédent disponible.</p>
-            }
-
-            <!-- Section Incompatibilités -->
-            @if (Model.Incompatibilites != null && Model.Incompatibilites.Any())
-            {
-                <div class="form-group">
-                    <label for="incompatibilites">Incompatibilités</label>
-                    @foreach (var incompatibilite in Model.Incompatibilites)
-                    {
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="@incompatibilite.IncompatibiliteId"
-                                id="incompatibilite_@incompatibilite.IncompatibiliteId" name="SelectedIncompatibilitesId" />
-                            <label class="form-check-label" for="incompatibilite_@incompatibilite.IncompatibiliteId">
-                                @incompatibilite.Interdiction
-                                <!-- Assurez-vous que 'Description' est bien la propriété contenant le texte -->
-                            </label>
-                        </div>
-                    }
-                </div>
-            }
-            else
-            {
-                <p>Aucune incompatibilité disponible.</p>
-            }
-
-
-            <div class="form-group">
-                <input type="submit" value="Ajouter le Patient" class="btn btn-primary" />
-                <input type="button" onclick="history.back()" value="Annuler" class="btn btn-secondary" />
-            </div>
-
-        </form>
-
-        <div asp-validation-summary="All" class="text-danger"></div>
-    </div>
+    <div asp-validation-summary="All" class="text-danger"></div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

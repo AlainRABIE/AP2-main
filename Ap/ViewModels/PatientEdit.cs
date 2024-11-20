@@ -11,5 +11,6 @@ namespace ASPBookProject.ViewModels;
         public List<Incompatibilite>? Incompatibilite { get; set; }
         public List<int> SelectedAntecedentIds { get; set; } = new List<int>();
         public List<int> SelectedAllergieIds { get; set; } = new List<int>();
+        
     }
 

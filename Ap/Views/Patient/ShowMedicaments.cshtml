@@ -1,5 +1,5 @@
 ﻿@{
-    Layout = "_Layout"; 
+    Layout = "_Layout";
 }
 @model IEnumerable<ASPBookProject.Models.Medicament>
 
@@ -35,7 +35,7 @@
                     <td>@medicament.Nom</td>
                     <td>@medicament.Allergie</td>
                     <td>@medicament.Posologie</td>
-                    
+
                     <td class="text-center">
                         <a asp-action="Edit" asp-controller="Medicament" asp-route-id="@medicament.MedicamentId"
                             class="btn btn-primary btn-sm">
@@ -52,7 +52,7 @@
                         </button>
                     </td>
                 </tr>
-             
+
                 <div class="modal fade" id="detailsModal-@medicament.MedicamentId" tabindex="-1" role="dialog"
                     aria-labelledby="detailsModalLabel-@medicament.MedicamentId" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -93,9 +93,12 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                                <form asp-action="Delete" asp-controller="Medicament" method="post" class="d-inline">
+                                <form asp-action="DeleteConfirmed" asp-controller="Medicament" method="post"
+                                    class="d-inline">
                                     <input type="hidden" name="id" value="@medicament.MedicamentId" />
-                                    <button type="submit" class="btn btn-danger">Confirmer</button>
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash-alt"></i> Supprimer
+                                    </button>
                                 </form>
                             </div>
                         </div>
