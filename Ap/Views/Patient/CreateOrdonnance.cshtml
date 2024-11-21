@@ -21,6 +21,7 @@
 
         <form asp-action="CreateOrdonnance" method="post">
             @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="MedecinId" />
 
             <div class="form-group">
                 <label for="patientId">Sélectionner le Patient :</label>
@@ -45,24 +46,28 @@
             </div>
 
             <!-- Vérification si la liste des médicaments est vide -->
-          <div class="form-group">
-    <label>Sélectionner les Médicaments :</label>
-    @if (Model.Medicaments != null && Model.Medicaments.Any())
-    {
-        <div class="form-check">
-            @foreach (var medicament in Model.Medicaments)
-            {
-                <input type="checkbox" class="form-check-input" id="medicament_@medicament.MedicamentId" name="SelectedMedicaments" value="@medicament.MedicamentId" />
-                <label class="form-check-label" for="medicament_@medicament.MedicamentId">@medicament.Nom</label><br />
-            }
-        </div>
-    }
-    else
-    {
-        <div class="alert alert-warning">Aucun médicament disponible.</div>
-    }
-    <small class="form-text text-muted">Sélectionnez les médicaments que vous souhaitez prescrire.</small>
-</div>
+            <div class="form-group">
+                <label>Sélectionner les Médicaments :</label>
+                @if (Model.Medicaments != null && Model.Medicaments.Any())
+                {
+                    <div class="form-check">
+                        @foreach (var medicament in Model.Medicaments)
+                        {
+                            <input type="checkbox" class="form-check-input" id="medicament_@medicament.MedicamentId"
+                                name="SelectedMedicaments" value="@medicament.MedicamentId" />
+                            <label class="form-check-label"
+                                for="medicament_@medicament.MedicamentId">@medicament.Nom</label>
+
+                            <br />
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning">Aucun médicament disponible.</div>
+                }
+                <small class="form-text text-muted">Sélectionnez les médicaments que vous souhaitez prescrire.</small>
+            </div>
 
 
 

@@ -101,7 +101,6 @@
             <th>Date de Fin</th>
             <th>Pathologie</th>
             <th>Médicament</th>
-            <th>Medecin</th>
             <th>Ordonnances N°</th>
             <th>Actions</th>
         </tr>
@@ -130,7 +129,6 @@
                         <span>Aucun médicament</span>
                     }
                 </td>
-                <td>@ordonnance.MedecinId</td>
                 <td>@ordonnance.OrdonnanceId</td>
                 <td>
                     <form asp-action="DownloadOrdonnance" method="post" style="display:inline;">

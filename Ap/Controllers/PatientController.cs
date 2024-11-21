@@ -314,74 +314,57 @@ namespace ASPBookProject.Controllers
             return File(stream, "text/plain", fileName);
         }
         [HttpGet]
-public async Task<IActionResult> CreateOrdonnance()
-{
-    var medicaments = await _context.Medicaments.ToListAsync();
-    var patients = await _context.Patients.ToListAsync();
-    var viewModel = new OrdonnanceViewModel
-    {
-        Patients = patients,
-        Medicaments = medicaments
-    };
-
-    if (medicaments == null || !medicaments.Any())
-    {
-        Console.WriteLine("Aucun médicament disponible dans la base de données.");
-    }
-
-    return View(viewModel);
-}
-
-[HttpPost]
-[ValidateAntiForgeryToken]
-public async Task<IActionResult> CreateOrdonnance(OrdonnanceViewModel viewModel)
-{
-    if (ModelState.IsValid)
-    {
-        // Recherche du patient
-        var patient = await _context.Patients.FindAsync(viewModel.PatientId);
-
-        if (patient == null)
+        public async Task<IActionResult> CreateOrdonnance()
         {
-            ModelState.AddModelError("", "Le patient spécifié est introuvable.");
-            viewModel.Patients = await _context.Patients.ToListAsync();
+            var medicaments = await _context.Medicaments.ToListAsync();
+            var patients = await _context.Patients.ToListAsync();
+            var viewModel = new OrdonnanceViewModel
+            {
+                Patients = patients,
+                Medicaments = medicaments
+            };
+            if (medicaments == null || !medicaments.Any())
+            {
+                Console.WriteLine("Aucun médicament disponible dans la base de données.");
+            }
+
             return View(viewModel);
         }
 
-        // Vérifier si le patient a déjà une ordonnance
-        var ordonnanceExistante = await _context.Ordonnances
-            .FirstOrDefaultAsync(o => o.PatientId == viewModel.PatientId);
 
-        if (ordonnanceExistante != null)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateOrdonnance(OrdonnanceViewModel viewModel)
         {
-            // Si une ordonnance existe déjà pour ce patient, afficher un message d'erreur
-            ModelState.AddModelError("", "Ce patient a déjà une ordonnance.");
+            if (ModelState.IsValid)
+            {
+                var patient = await _context.Patients.FindAsync(viewModel.PatientId);
+
+                if (patient == null)
+                {
+                    ModelState.AddModelError("", "Le patient spécifié est introuvable.");
+                    viewModel.Patients = await _context.Patients.ToListAsync();
+                    return View(viewModel);
+                }
+
+                var ordonnance = new Ordonnance
+                {
+                    PatientId = viewModel.PatientId,
+                    Patologie = viewModel.Patologie,
+                    DateDébut = viewModel.DateDébut,
+                    DateFin = viewModel.DateFin,
+                    Patient = patient,
+                    Medicaments = viewModel.Medicaments
+                };
+
+                _context.Ordonnances.Add(ordonnance);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("ShowOrdonnance", new { patientId = viewModel.PatientId });
+            }
+
             viewModel.Patients = await _context.Patients.ToListAsync();
             return View(viewModel);
         }
-
-        // Créer une nouvelle ordonnance si aucune ordonnance n'existe
-        var ordonnance = new Ordonnance
-        {
-            PatientId = viewModel.PatientId,
-            Patologie = viewModel.Patologie,
-            DateDébut = viewModel.DateDébut,
-            DateFin = viewModel.DateFin,
-            Patient = patient,
-            Medicaments = viewModel.Medicaments
-        };
-
-        _context.Ordonnances.Add(ordonnance);
-        await _context.SaveChangesAsync();
-
-        // Rediriger vers la page des ordonnances du patient
-        return RedirectToAction("ShowOrdonnance", new { patientId = viewModel.PatientId });
-    }
-
-    // En cas de modèle invalide, retourner à la vue avec les données nécessaires
-    viewModel.Patients = await _context.Patients.ToListAsync();
-    return View(viewModel);
-}
-
     }
 }
