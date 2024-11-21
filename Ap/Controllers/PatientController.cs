@@ -346,6 +346,16 @@ namespace ASPBookProject.Controllers
                     viewModel.Patients = await _context.Patients.ToListAsync();
                     return View(viewModel);
                 }
+                var ordonnanceExistante = await _context.Ordonnances
+                    .FirstOrDefaultAsync(o => o.PatientId == viewModel.PatientId);
+
+                if (ordonnanceExistante != null)
+                {
+                    ModelState.AddModelError("", "Ce patient a déjà une ordonnance.");
+                    viewModel.Patients = await _context.Patients.ToListAsync();
+                    return View(viewModel);
+                }
+
 
                 var ordonnance = new Ordonnance
                 {

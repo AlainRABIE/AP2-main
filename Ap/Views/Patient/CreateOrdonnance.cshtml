@@ -40,12 +40,17 @@
             </div>
 
             <div class="form-group">
-                <label for="Date">Date de l'Ordonnance</label>
-                <input type="date" class="form-control" id="Date" name="Date"
+                <label for="DateDébut">Date de Début de l'Ordonnance</label>
+                <input type="date" class="form-control" id="DateDébut" name="DateDébut"
                     value="@DateTime.Now.ToString("yyyy-MM-dd")" required />
             </div>
 
-            <!-- Vérification si la liste des médicaments est vide -->
+            <div class="form-group">
+                <label for="DateFin">Date de Fin de l'Ordonnance</label>
+                <input type="date" class="form-control" id="DateFin" name="DateFin"
+                    value="@DateTime.Now.ToString("yyyy-MM-dd")" required />
+            </div>
+
             <div class="form-group">
                 <label>Sélectionner les Médicaments :</label>
                 @if (Model.Medicaments != null && Model.Medicaments.Any())
@@ -55,8 +60,7 @@
                         {
                             <input type="checkbox" class="form-check-input" id="medicament_@medicament.MedicamentId"
                                 name="SelectedMedicaments" value="@medicament.MedicamentId" />
-                            <label class="form-check-label"
-                                for="medicament_@medicament.MedicamentId">@medicament.Nom</label>
+                            <label class="form-check-label" for="medicament_@medicament.MedicamentId">@medicament.Nom</label>
 
                             <br />
                         }

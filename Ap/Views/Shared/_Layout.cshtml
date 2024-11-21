@@ -100,7 +100,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" asp-action="ListPatients" asp-controller="Patient">Ordonnance</a>
-                        
+
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Contact" asp-action="Index">SAV</a>
@@ -116,11 +116,18 @@
                 </ul>
                 <div class="d-flex align-items-center ms-auto">
 
+                    <form asp-action="Logout" asp-controller="Account" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-link nav-link"
+                            style="background: none; border: none; color: white;">
+                            Déconnexion
+                        </button>
+                    </form>
                     @if (User.Identity.IsAuthenticated)
                     {
                         <span class="navbar-text text-white me-3">Bonjour, @User.Identity.Name!</span>
                     }
                     <div class="form-check form-switch ms-3">
+
 
                         <input class="form-check-input" type="checkbox" id="darkModeToggle">
                         <label class="form-check-label text-white" for="darkModeToggle">Mode Sombre</label>

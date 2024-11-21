@@ -16,12 +16,11 @@ namespace ASPBookProject.Controllers
             _signInManager = signInManager;
             _userManager = userManager;
         }
-
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Login", "Patient");
+            return RedirectToAction("Login", "Patient"); // Redirige vers la page Login du contrôleur Patient
         }
 
         public IActionResult Register()
@@ -84,7 +83,7 @@ namespace ASPBookProject.Controllers
         [HttpGet]
         public IActionResult FAQ()
         {
-            return View("~/Views/FAQ/FAQ.cshtml"); 
+            return View("~/Views/FAQ/FAQ.cshtml");
         }
         [HttpGet]
         public IActionResult Guide()
