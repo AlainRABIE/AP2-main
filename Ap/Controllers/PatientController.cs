@@ -190,7 +190,41 @@ namespace ASPBookProject.Controllers
 
         public IActionResult Register()
         {
-            return RedirectToAction("index", "Patient");
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Register(string identifiant, string username, string password)
+        {
+            if (string.IsNullOrWhiteSpace(identifiant) || string.IsNullOrWhiteSpace(password))
+            {
+                return BadRequest("Identifiant et mot de passe sont requis.");
+            }
+
+            var exists = _context.Medecins.Any(m => m.Identifiant == identifiant);
+            if (exists)
+            {
+                return BadRequest("Cet identifiant existe déjà.");
+            }
+
+            var medecin = new Medecin
+            {
+                Identifiant = identifiant,
+                UserName = username ?? identifiant,
+                Email = $"{identifiant}@example.com",
+                PasswordHash = password 
+            };
+
+            try
+            {
+                _context.Medecins.Add(medecin);
+                _context.SaveChanges();
+
+                return Ok("Médecin inscrit avec succès !");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Erreur lors de l'inscription : {ex.Message}");
+            }
         }
 
         [HttpGet]

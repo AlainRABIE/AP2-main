@@ -20,7 +20,7 @@ namespace ASPBookProject.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Login", "Patient"); // Redirige vers la page Login du contrôleur Patient
+            return RedirectToAction("Login", "Patient");
         }
 
         public IActionResult Register()
@@ -28,58 +28,58 @@ namespace ASPBookProject.Controllers
             return View();
         }
 
-        [HttpGet]
-        public async Task<IActionResult> EditProfil()
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return NotFound();
-            }
+        // [HttpGet]
+        // public async Task<IActionResult> EditProfil()
+        // {
+        //     var user = await _userManager.GetUserAsync(User);
+        //     if (user == null)
+        //     {
+        //         return NotFound();
+        //     }
 
-            var model = new UserProfileViewModel
-            {
-                UserName = user.UserName,
-                Email = user.Email,
-                PhoneNumber = user.PhoneNumber,
-                Identifiant = user.Id
-            };
+        //     var model = new UserProfileViewModel
+        //     {
+        //         UserName = user.UserName,
+        //         Email = user.Email,
+        //         PhoneNumber = user.PhoneNumber,
+        //         Identifiant = user.Id
+        //     };
 
-            return View("EditProfil", model);
-        }
+        //     return View("EditProfil", model);
+        // }
 
-        [HttpPost]
-        public async Task<IActionResult> EditProfil(UserProfileViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View("EditProfil", model);
-            }
+        // [HttpPost]
+        // public async Task<IActionResult> EditProfil(UserProfileViewModel model)
+        // {
+        //     if (!ModelState.IsValid)
+        //     {
+        //         return View("EditProfil", model);
+        //     }
 
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return NotFound();
-            }
+        //     var user = await _userManager.GetUserAsync(User);
+        //     if (user == null)
+        //     {
+        //         return NotFound();
+        //     }
 
-            user.UserName = model.UserName;
-            user.Email = model.Email;
-            user.PhoneNumber = model.PhoneNumber;
+        //     user.UserName = model.UserName;
+        //     user.Email = model.Email;
+        //     user.PhoneNumber = model.PhoneNumber;
 
-            var result = await _userManager.UpdateAsync(user);
+        //     var result = await _userManager.UpdateAsync(user);
 
-            if (result.Succeeded)
-            {
-                return RedirectToAction("Index", "Home");
-            }
+        //     if (result.Succeeded)
+        //     {
+        //         return RedirectToAction("Index", "Home");
+        //     }
 
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
+        //     foreach (var error in result.Errors)
+        //     {
+        //         ModelState.AddModelError(string.Empty, error.Description);
+        //     }
 
-            return View("EditProfil", model);
-        }
+        //     return View("EditProfil", model);
+        // }
         [HttpGet]
         public IActionResult FAQ()
         {
