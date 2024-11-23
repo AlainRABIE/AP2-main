@@ -148,10 +148,10 @@ namespace ASPBookProject.Controllers
 
             if (ordonnance == null)
             {
-                return NotFound(); // Si l'ordonnance n'existe pas, retourner une page 404
+                return NotFound(); 
             }
 
-            // Créer un modèle ViewModel pour transmettre les données à la vue
+            
             var viewModel = new OrdonnanceViewModel
             {
                 OrdonnanceId = ordonnance.OrdonnanceId,
@@ -160,13 +160,12 @@ namespace ASPBookProject.Controllers
                 DateDébut = ordonnance.DateDébut,
                 DateFin = ordonnance.DateFin,
                 MedecinId = ordonnance.MedecinId,
-                Patients = await _context.Patients.ToListAsync(), // Liste des patients pour le dropdown
+                Patients = await _context.Patients.ToListAsync(),
             };
 
             return View(viewModel);
         }
 
-        // Action POST pour enregistrer les modifications
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditOrdonnance(int id, OrdonnanceViewModel viewModel)
@@ -186,18 +185,15 @@ namespace ASPBookProject.Controllers
                         return NotFound();
                     }
 
-                    // Mettre à jour les propriétés de l'ordonnance
                     ordonnance.PatientId = viewModel.PatientId;
                     ordonnance.Patologie = viewModel.Patologie;
                     ordonnance.DateDébut = viewModel.DateDébut;
                     ordonnance.DateFin = viewModel.DateFin;
                     ordonnance.MedecinId = viewModel.MedecinId;
 
-                    // Sauvegarder les modifications dans la base de données
                     _context.Update(ordonnance);
                     await _context.SaveChangesAsync();
 
-                    // Rediriger vers la page des ordonnances après modification
                     return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
