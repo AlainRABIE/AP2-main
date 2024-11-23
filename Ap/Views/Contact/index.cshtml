@@ -26,24 +26,20 @@
     </form>
 </div>
 
-<!-- Charger la bibliothèque Email.js -->
 <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
 
 <script>
     emailjs.init('lo4AhKedFQzMNqU8R'); // Remplacez par votre ID utilisateur Email.js
 
-    // Fonction pour envoyer le formulaire
     document.getElementById('contactForm').addEventListener('submit', function (event) {
         event.preventDefault();  // Empêche l'envoi par défaut du formulaire
 
-        // Récupérer les valeurs du formulaire
         var formData = {
             from_name: document.getElementById('nom').value,
             from_email: document.getElementById('email').value,
             message: document.getElementById('message').value
         };
 
-        // Envoyer l'email via Email.js
         emailjs.send('service_xh87yyr', 'template_0ykd41k', formData)
             .then(function(response) {
                 // Si l'email est envoyé avec succès
