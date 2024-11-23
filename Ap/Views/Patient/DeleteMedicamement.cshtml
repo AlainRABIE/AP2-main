@@ -22,13 +22,11 @@
             <p><strong>Allergie :</strong> @Model.Allergie</p>
         </div>
 
-        <!-- Bouton pour ouvrir la modal -->
         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
             Supprimer le Médicament
         </button>
     </div>
 
-    <!-- Modal de confirmation de suppression -->
     <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -43,10 +41,8 @@
                     <p><strong>Allergie :</strong> @Model.Allergie</p>
                 </div>
                 <div class="modal-footer">
-                    <!-- Bouton Annuler pour fermer la modal -->
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
 
-                    <!-- Formulaire pour soumettre la suppression -->
                     <form asp-action="DeleteConfirmed" asp-controller="Medicament" method="post">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="id" value="@Model.MedicamentId" />
