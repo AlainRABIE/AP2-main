@@ -5,14 +5,14 @@ namespace ASPBookProject.ViewModels
     {
 
         
-            [Required(ErrorMessage = "The Username field is required.")]
+            [Required(ErrorMessage = "L'identifiant est requis")]
             public string? UserName { get; set; }
 
             [Required]
             [DataType(DataType.Password)]
             public string? Password { get; set; }
 
-            [Display(Name = "Remember me?")]
+            [Display(Name = "Se souvenir de moi?")]
             public bool RememberMe { get; set; }
         }
     }
