@@ -1,4 +1,5 @@
 ﻿@model PatientEditViewModel
+
 @{
     Layout = "_Layout";
 }
@@ -17,7 +18,9 @@
 
     <form asp-action="AddPatient" asp-controller="Patient" method="post">
 
+        <!-- Champ caché pour PatientId -->
         <input asp-for="Patient.PatientId" type="hidden" value="0" />
+
         <div class="form-group">
             <label asp-for="Patient.Age"></label>
             <input asp-for="Patient.Age" class="form-control" />
@@ -34,9 +37,30 @@
             <label asp-for="Patient.Nom"></label>
             <input asp-for="Patient.Nom" class="form-control" />
             <span asp-validation-for="Patient.Nom" class="text-danger"></span>
-            <span asp-validation-for="Patient.Antecedents" class="text-danger"></span>
-            <span asp-validation-for="Patient.Ordonnance" class="text-danger"></span>
         </div>
+        <h4>Antécédents </h4>
+        <div class="form-group">
+            @foreach (var antecedent in Model.Antecedents)
+            {
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="SelectedAntecedentIds"
+                           value="@antecedent.AntecedentId"
+                           @(Model.SelectedAntecedentIds != null &&
+                             Model.SelectedAntecedentIds.Contains(antecedent.AntecedentId) ? "checked" : "") />
+                    <label class="form-check-label">@antecedent.Nom</label>
+                </div>
+            }
+        </div>
+        <div>
+        <label>Allergies</label>
+        @foreach (var incompatibilites in Model.Incompatibilites)
+        {
+            <div>
+                <input type="checkbox" name="SelectedAllergieIds" value="@incompatibilites.IncompatibiliteId" @(Model.SelectedIncompatibilitesId.Contains(incompatibilites.IncompatibiliteId) ? "checked" : "") />
+                <label>@incompatibilites.Interdiction</label>
+            </div>
+        }
+    </div>
         <input type="submit" value="Ajouter le Patient" class="btn btn-primary" />
         <input type="button" onclick="history.back()" value="Annuler" class="btn btn-secondary" />
     </form>

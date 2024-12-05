@@ -39,11 +39,10 @@
                         <td>@patient.Nom</td>
                         <td>@patient.Prenom</td>
                         <td>
-                            <a class="btn btn-primary" asp-action="CreateOrdonnance"
+                            <a class="btn btn-success" asp-action="CreateOrdonnance"
                                 asp-route-patientId="@patient.PatientId">Créer Ordonnance</a>
                         </td>
                     </tr>
-                    
                 }
             </tbody>
         </table>
@@ -63,7 +62,7 @@
                 if (tdNom || tdPrenom) {
                     var nomValue = tdNom.textContent || tdNom.innerText;
                     var prenomValue = tdPrenom.textContent || tdPrenom.innerText;
-                    tr[i].style.display = nomValue.toLowerCase().indexOf(filter) === 0 || prenomValue.toLowerCase().indexOf(filter) === 0 ? "" : "none"; 
+                    tr[i].style.display = nomValue.toLowerCase().indexOf(filter) === 0 || prenomValue.toLowerCase().indexOf(filter) === 0 ? "" : "none";
                 }
             }
         }

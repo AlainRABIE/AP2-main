@@ -1,0 +1,57 @@
+﻿@model List<ASPBookProject.Models.Ordonnance>
+@{
+    Layout = "_Layout";
+}
+<h2>Liste des ordonnances</h2>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Patient</th>
+                <th>Pathologie</th>
+                <th>Date de début</th>
+                <th>Date de fin</th>
+                <th>Actions</th> <!-- Ajout d'une colonne Actions -->
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ordonnance in Model)
+            {
+                <tr>
+                    <td>@ordonnance.Patient?.Nom</td> 
+                    <td>@ordonnance.Patologie</td>
+                    <td>@ordonnance.DateDébut.ToString("d")</td>
+                    <td>@ordonnance.DateFin.ToString("d")</td>
+                    <td>
+                        <!-- Container flexbox pour les boutons côte à côte -->
+                        <div style="display: flex; gap: 10px;">
+                            <!-- Formulaire pour supprimer l'ordonnance -->
+                            <form action="@Url.Action("DeleteConfirmedOrdonnance", "Ordonnance", new { id = ordonnance.OrdonnanceId })" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette ordonnance ?');" style="display:inline;">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-danger">Supprimer</button>
+                            </form>
+
+                            <!-- Formulaire pour télécharger l'ordonnance -->
+                            <form asp-controller="Patient" asp-action="DownloadOrdonnance" method="post" style="display:inline;">
+                                <input type="hidden" name="ordonnanceId" value="@ordonnance.OrdonnanceId" />
+                                <button type="submit" class="btn btn-primary">Télécharger</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Aucune ordonnance disponible pour les patients.</p>
+}
+
+<div>
+    <a class="btn btn-primary" asp-controller="Patient" asp-action="CreateOrdonnance" asp-route-patientId="@Model.FirstOrDefault()?.PatientId">
+        Créer une nouvelle ordonnance
+    </a>
+</div>

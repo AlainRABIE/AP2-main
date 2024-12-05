@@ -3,9 +3,6 @@ using ASPBookProject.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ASPBookProject.ViewModels;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 public class PatientEditViewModel
 {
@@ -211,7 +208,7 @@ namespace ASPBookProject.Controllers
                 Identifiant = identifiant,
                 UserName = username ?? identifiant,
                 Email = $"{identifiant}@example.com",
-                PasswordHash = password 
+                PasswordHash = password
             };
 
             try
@@ -268,10 +265,11 @@ namespace ASPBookProject.Controllers
             }
 
             var ordonnances = await _context.Ordonnances
-                .Where(o => o.PatientId == patient.PatientId)
-                .Include(o => o.Patient)
-                .Include(o => o.Medecin)
-                .ToListAsync();
+     .Where(o => o.PatientId == patient.PatientId)
+     .Include(o => o.Patient)
+     .Include(o => o.Medecin)
+     .Include(o => o.Medicaments)  // Ajout de l'inclusion des médicaments
+     .ToListAsync();
 
             if (!ordonnances.Any())
             {
@@ -303,10 +301,13 @@ namespace ASPBookProject.Controllers
             if (ModelState.IsValid)
             {
                 var patient = model.Patient;
+
+                // Récupérer les antécédents sélectionnés
                 patient.Antecedents = await _context.Antecedents
                     .Where(a => model.SelectedAntecedentIds.Contains(a.AntecedentId))
                     .ToListAsync();
 
+                // Récupérer les incompatibilités (allergies) sélectionnées
                 patient.Incompatibilites = await _context.Incompatibilites
                     .Where(i => model.SelectedIncompatibilitesId.Contains(i.IncompatibiliteId))
                     .ToListAsync();
@@ -316,6 +317,8 @@ namespace ASPBookProject.Controllers
 
                 return RedirectToAction("Index");
             }
+
+            // Recharger les listes d'antécédents et d'incompatibilités en cas d'erreur de validation
             model.Antecedents = await _context.Antecedents.ToListAsync();
             model.Incompatibilites = await _context.Incompatibilites.ToListAsync();
             return View(model);
@@ -335,18 +338,33 @@ namespace ASPBookProject.Controllers
             }
 
             var fileContent = $"Ordonnance ID: {ordonnance.OrdonnanceId}\n" +
-                              $"Date: {ordonnance.DateDébut.ToString("yyyy-MM-dd")}\n" +
-                              $"Date: {ordonnance.DateFin.ToString("yyyy-MM-dd")}\n" +
+                              $"Date Début: {ordonnance.DateDébut:yyyy-MM-dd}\n" +
+                              $"Date Fin: {ordonnance.DateFin:yyyy-MM-dd}\n" +
                               $"Pathologie: {ordonnance.Patologie}\n" +
-                              $"Médecin ID: {ordonnance.MedecinId}";
+                              $"Médecin ID: {ordonnance.Medicaments}\n\n" +
+                              "Médicaments:\n";
 
-            var bytes = System.Text.Encoding.UTF8.GetBytes(fileContent);
-            var stream = new MemoryStream(bytes);
+            foreach (var medicament in ordonnance.Medicaments)
+            {
+                fileContent += $"- {medicament.Nom}: {medicament.Posologie}\n";
+            }
 
-            var fileName = $"Ordonnance_{ordonnanceId}.txt";
+            // Convertir le texte en PDF avec les options de base d'en-tête.
+            byte[] pdfBytes;
+            using (var ms = new MemoryStream())
+            {
+                var writer = new StreamWriter(ms);
+                writer.Write(fileContent);
+                writer.Flush();
 
-            return File(stream, "text/plain", fileName);
+                pdfBytes = ms.ToArray(); // Contenu en mémoire au lieu de lib tierce
+            }
+
+            var fileName = $"Ordonnance_{ordonnanceId}.pdf";
+
+            return File(pdfBytes, "application/pdf", fileName);
         }
+
         [HttpGet]
         public async Task<IActionResult> CreateOrdonnance()
         {
@@ -365,7 +383,6 @@ namespace ASPBookProject.Controllers
             return View(viewModel);
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateOrdonnance(OrdonnanceViewModel viewModel)
@@ -380,6 +397,7 @@ namespace ASPBookProject.Controllers
                     viewModel.Patients = await _context.Patients.ToListAsync();
                     return View(viewModel);
                 }
+
                 var ordonnanceExistante = await _context.Ordonnances
                     .FirstOrDefaultAsync(o => o.PatientId == viewModel.PatientId);
 
@@ -390,25 +408,37 @@ namespace ASPBookProject.Controllers
                     return View(viewModel);
                 }
 
-
+                // Créer l'ordonnance
                 var ordonnance = new Ordonnance
                 {
                     PatientId = viewModel.PatientId,
                     Patologie = viewModel.Patologie,
                     DateDébut = viewModel.DateDébut,
                     DateFin = viewModel.DateFin,
-                    Patient = patient,
-                    Medicaments = viewModel.Medicaments
+                    MedecinId = viewModel.MedecinId,
+                    Patient = patient
                 };
 
+                // Sélectionner les médicaments basés sur les IDs choisis
+                var selectedMedicaments = await _context.Medicaments
+                    .Where(m => viewModel.SelectedMedicaments.Contains(m.MedicamentId))
+                    .ToListAsync();
+
+                ordonnance.Medicaments = selectedMedicaments;
+
+                // Enregistrer l'ordonnance
                 _context.Ordonnances.Add(ordonnance);
                 await _context.SaveChangesAsync();
 
+                // Rediriger vers la vue de l'ordonnance
                 return RedirectToAction("ShowOrdonnance", new { patientId = viewModel.PatientId });
             }
 
+            // Si le modèle est invalide, renvoyer la vue avec les erreurs
             viewModel.Patients = await _context.Patients.ToListAsync();
+            viewModel.Medicaments = await _context.Medicaments.ToListAsync();  // Assurez-vous de charger la liste des médicaments
             return View(viewModel);
         }
+
     }
 }
