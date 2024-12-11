@@ -221,7 +221,7 @@ namespace ASPBookProject.Controllers
                 return NotFound();
             }
 
-            return View(ordonnance); // Passe l'ordonnance à la vue de confirmation.
+            return View(ordonnance);
         }
 
         [HttpPost, ActionName("DeleteConfirmedOrdonnance")]
@@ -244,7 +244,7 @@ namespace ASPBookProject.Controllers
             var ordonnances = await _context.Ordonnances
                 .Include(o => o.Patient)
                 .Include(o => o.Medecin)
-                .Where(o => o.Patient != null) // Filtre pour ne récupérer que les ordonnances avec un patient associé
+                .Where(o => o.Patient != null) 
                 .ToListAsync();
 
             return View(ordonnances);

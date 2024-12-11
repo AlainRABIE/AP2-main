@@ -1,0 +1,77 @@
+@model ASPBookProject.ViewModels.AntecedentEditViewModel
+
+
+
+<div class="container mt-4">
+    <h1>@ViewData["Title"]</h1>
+
+    <form asp-action="Add" method="post">
+
+        <!-- Champ pour le nom de l'antécédent -->
+        <div class="mb-3">
+            <label asp-for="Nom" class="form-label">Nom</label>
+            <input asp-for="Nom" class="form-control" />
+            <span asp-validation-for="Nom" class="text-danger"></span>
+        </div>
+
+        <!-- Liste des médicaments associés avec des checkboxes -->
+        <div class="mb-3">
+            <label class="form-label">Médicaments associés</label>
+            <div>
+                @if (Model.Medicaments != null)
+                {
+                    foreach (var medicament in Model.Medicaments)
+                    {
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="medicament_@medicament.MedicamentId"
+                                name="SelectedMedicamentIds" value="@medicament.MedicamentId" />
+                            <label class="form-check-label" for="medicament_@medicament.MedicamentId">@medicament.Nom</label>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Patients associés</label>
+            <div>
+                @if (Model.Patients != null)
+                {
+                    foreach (var patient in Model.Patients)
+                    {
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="patient_@patient.PatientId"
+                                name="SelectedPatientIds" value="@patient.PatientId" />
+                            <label class="form-check-label" for="patient_@patient.PatientId">@patient.Nom</label>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <!-- Liste des patients associés avec des checkboxes -->
+        <div class="mb-3">
+            <label class="form-label">Patients associés</label>
+            <div>
+                @foreach (var patient in Model.Patients)
+                {
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="patient_@patient.PatientId"
+                            name="SelectedPatientIds" value="@patient.PatientId" />
+                        <label class="form-check-label" for="patient_@patient.PatientId">@patient.Nom</label>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Boutons de soumission et d'annulation -->
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">Ajouter l'Antécédent</button>
+            <a asp-action="Index" class="btn btn-secondary">Annuler</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

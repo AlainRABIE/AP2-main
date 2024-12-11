@@ -268,7 +268,7 @@ namespace ASPBookProject.Controllers
      .Where(o => o.PatientId == patient.PatientId)
      .Include(o => o.Patient)
      .Include(o => o.Medecin)
-     .Include(o => o.Medicaments)  // Ajout de l'inclusion des médicaments
+     .Include(o => o.Medicaments) 
      .ToListAsync();
 
             if (!ordonnances.Any())
@@ -301,13 +301,10 @@ namespace ASPBookProject.Controllers
             if (ModelState.IsValid)
             {
                 var patient = model.Patient;
-
-                // Récupérer les antécédents sélectionnés
                 patient.Antecedents = await _context.Antecedents
                     .Where(a => model.SelectedAntecedentIds.Contains(a.AntecedentId))
                     .ToListAsync();
 
-                // Récupérer les incompatibilités (allergies) sélectionnées
                 patient.Incompatibilites = await _context.Incompatibilites
                     .Where(i => model.SelectedIncompatibilitesId.Contains(i.IncompatibiliteId))
                     .ToListAsync();
@@ -318,7 +315,6 @@ namespace ASPBookProject.Controllers
                 return RedirectToAction("Index");
             }
 
-            // Recharger les listes d'antécédents et d'incompatibilités en cas d'erreur de validation
             model.Antecedents = await _context.Antecedents.ToListAsync();
             model.Incompatibilites = await _context.Incompatibilites.ToListAsync();
             return View(model);
@@ -349,7 +345,6 @@ namespace ASPBookProject.Controllers
                 fileContent += $"- {medicament.Nom}: {medicament.Posologie}\n";
             }
 
-            // Convertir le texte en PDF avec les options de base d'en-tête.
             byte[] pdfBytes;
             using (var ms = new MemoryStream())
             {
@@ -357,7 +352,7 @@ namespace ASPBookProject.Controllers
                 writer.Write(fileContent);
                 writer.Flush();
 
-                pdfBytes = ms.ToArray(); // Contenu en mémoire au lieu de lib tierce
+                pdfBytes = ms.ToArray(); 
             }
 
             var fileName = $"Ordonnance_{ordonnanceId}.pdf";
@@ -408,7 +403,6 @@ namespace ASPBookProject.Controllers
                     return View(viewModel);
                 }
 
-                // Créer l'ordonnance
                 var ordonnance = new Ordonnance
                 {
                     PatientId = viewModel.PatientId,
@@ -419,24 +413,20 @@ namespace ASPBookProject.Controllers
                     Patient = patient
                 };
 
-                // Sélectionner les médicaments basés sur les IDs choisis
                 var selectedMedicaments = await _context.Medicaments
                     .Where(m => viewModel.SelectedMedicaments.Contains(m.MedicamentId))
                     .ToListAsync();
 
                 ordonnance.Medicaments = selectedMedicaments;
 
-                // Enregistrer l'ordonnance
                 _context.Ordonnances.Add(ordonnance);
                 await _context.SaveChangesAsync();
 
-                // Rediriger vers la vue de l'ordonnance
                 return RedirectToAction("ShowOrdonnance", new { patientId = viewModel.PatientId });
             }
 
-            // Si le modèle est invalide, renvoyer la vue avec les erreurs
             viewModel.Patients = await _context.Patients.ToListAsync();
-            viewModel.Medicaments = await _context.Medicaments.ToListAsync();  // Assurez-vous de charger la liste des médicaments
+            viewModel.Medicaments = await _context.Medicaments.ToListAsync();  
             return View(viewModel);
         }
 
