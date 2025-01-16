@@ -103,14 +103,19 @@
 
                     </li>
                     <li class="nav-item">
+                       <a class="nav-link" asp-action="OrdonnancesList" asp-controller="Ordonnance">Liste d'Ordonnance</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" asp-controller="Contact" asp-action="Index">SAV</a>
                     </li>
                     <li class="nav-item">
-                        @* <a class="nav-link" asp-action="EditProfil" asp-controller="Account">Modifier Profil</a> *@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" asp-action="StatistiquesMédicaments" asp-controller="Medicament">Stat</a>
                     </li>
+                      <li class="nav-item">
+                    <a class="nav-link" asp-controller="Antecedent" asp-action="Index">Antécédents</a>
+                </li>
 
 
                 </ul>
@@ -145,7 +150,6 @@
         <div class="footer-links">
             <a class="nav-link" asp-action="FAQ" asp-controller="Account">FAQ</a>
             <a class="nav-link" asp-action="Guide" asp-controller="Account">Guide d'utilisiation</a>
-            <a href="#">Contact</a>
         </div>
         <div class="mt-3">
             <p>&copy; Ap Alain RABIE <br> BTS SIO 2024-2025.</p>

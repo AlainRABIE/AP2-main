@@ -1,0 +1,47 @@
+@model IEnumerable<ASPBookProject.Models.Antecedent>
+@{
+    Layout = "_Layout";
+}
+
+<div class="container mt-4">
+    <h1>@ViewData["Title"]</h1>
+
+    <div class="mb-3">
+        <a asp-action="Add" class="btn btn-success">Ajouter un Antécédent</a>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var antecedent in Model)
+                {
+                    <tr>
+                        <td>@antecedent.Nom</td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@antecedent.AntecedentId" class="btn btn-warning btn-sm">
+                                Modifier
+                            </a>
+                            <form asp-action="Delete" asp-route-id="@antecedent.AntecedentId" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-danger btn-sm" 
+                                        onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet antécédent ?');">
+                                    Supprimer
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="text-muted">Aucun antécédent disponible.</p>
+    }
+</div>

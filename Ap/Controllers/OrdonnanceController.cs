@@ -152,6 +152,9 @@ namespace ASPBookProject.Controllers
             }
 
             
+                return NotFound();
+            }
+
             var viewModel = new OrdonnanceViewModel
             {
                 OrdonnanceId = ordonnance.OrdonnanceId,
@@ -210,6 +213,47 @@ namespace ASPBookProject.Controllers
             }
             viewModel.Patients = await _context.Patients.ToListAsync();
             return View(viewModel);
+        }
+        [HttpGet]
+        public async Task<IActionResult> Deleteordonannce(int id)
+        {
+            var ordonnance = await _context.Ordonnances
+                .Include(o => o.Patient)
+                .Include(o => o.Medecin)
+                .FirstOrDefaultAsync(o => o.OrdonnanceId == id);
+
+            if (ordonnance == null)
+            {
+                return NotFound();
+            }
+
+            return View(ordonnance);
+        }
+
+        [HttpPost, ActionName("DeleteConfirmedOrdonnance")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmedOrdonnance(int id)
+        {
+            var ordonnance = await _context.Ordonnances.FindAsync(id);
+            if (ordonnance == null)
+            {
+                return NotFound();
+            }
+
+            _context.Ordonnances.Remove(ordonnance);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("OrdonnancesList");
+        }
+        public async Task<IActionResult> OrdonnancesList()
+        {
+            var ordonnances = await _context.Ordonnances
+                .Include(o => o.Patient)
+                .Include(o => o.Medecin)
+                .Where(o => o.Patient != null) 
+                .ToListAsync();
+
+            return View(ordonnances);
         }
     }
 }

@@ -3,9 +3,6 @@ using ASPBookProject.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ASPBookProject.ViewModels;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 public class PatientEditViewModel
 {
@@ -211,7 +208,7 @@ namespace ASPBookProject.Controllers
                 Identifiant = identifiant,
                 UserName = username ?? identifiant,
                 Email = $"{identifiant}@example.com",
-                PasswordHash = password 
+                PasswordHash = password
             };
 
             try
@@ -268,10 +265,11 @@ namespace ASPBookProject.Controllers
             }
 
             var ordonnances = await _context.Ordonnances
-                .Where(o => o.PatientId == patient.PatientId)
-                .Include(o => o.Patient)
-                .Include(o => o.Medecin)
-                .ToListAsync();
+     .Where(o => o.PatientId == patient.PatientId)
+     .Include(o => o.Patient)
+     .Include(o => o.Medecin)
+     .Include(o => o.Medicaments) 
+     .ToListAsync();
 
             if (!ordonnances.Any())
             {
@@ -316,6 +314,7 @@ namespace ASPBookProject.Controllers
 
                 return RedirectToAction("Index");
             }
+
             model.Antecedents = await _context.Antecedents.ToListAsync();
             model.Incompatibilites = await _context.Incompatibilites.ToListAsync();
             return View(model);
@@ -335,18 +334,32 @@ namespace ASPBookProject.Controllers
             }
 
             var fileContent = $"Ordonnance ID: {ordonnance.OrdonnanceId}\n" +
-                              $"Date: {ordonnance.DateDébut.ToString("yyyy-MM-dd")}\n" +
-                              $"Date: {ordonnance.DateFin.ToString("yyyy-MM-dd")}\n" +
+                              $"Date Début: {ordonnance.DateDébut:yyyy-MM-dd}\n" +
+                              $"Date Fin: {ordonnance.DateFin:yyyy-MM-dd}\n" +
                               $"Pathologie: {ordonnance.Patologie}\n" +
-                              $"Médecin ID: {ordonnance.MedecinId}";
+                              $"Médecin ID: {ordonnance.Medicaments}\n\n" +
+                              "Médicaments:\n";
 
-            var bytes = System.Text.Encoding.UTF8.GetBytes(fileContent);
-            var stream = new MemoryStream(bytes);
+            foreach (var medicament in ordonnance.Medicaments)
+            {
+                fileContent += $"- {medicament.Nom}: {medicament.Posologie}\n";
+            }
 
-            var fileName = $"Ordonnance_{ordonnanceId}.txt";
+            byte[] pdfBytes;
+            using (var ms = new MemoryStream())
+            {
+                var writer = new StreamWriter(ms);
+                writer.Write(fileContent);
+                writer.Flush();
 
-            return File(stream, "text/plain", fileName);
+                pdfBytes = ms.ToArray(); 
+            }
+
+            var fileName = $"Ordonnance_{ordonnanceId}.pdf";
+
+            return File(pdfBytes, "application/pdf", fileName);
         }
+
         [HttpGet]
         public async Task<IActionResult> CreateOrdonnance()
         {
@@ -365,7 +378,6 @@ namespace ASPBookProject.Controllers
             return View(viewModel);
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateOrdonnance(OrdonnanceViewModel viewModel)
@@ -380,6 +392,7 @@ namespace ASPBookProject.Controllers
                     viewModel.Patients = await _context.Patients.ToListAsync();
                     return View(viewModel);
                 }
+
                 var ordonnanceExistante = await _context.Ordonnances
                     .FirstOrDefaultAsync(o => o.PatientId == viewModel.PatientId);
 
@@ -390,16 +403,21 @@ namespace ASPBookProject.Controllers
                     return View(viewModel);
                 }
 
-
                 var ordonnance = new Ordonnance
                 {
                     PatientId = viewModel.PatientId,
                     Patologie = viewModel.Patologie,
                     DateDébut = viewModel.DateDébut,
                     DateFin = viewModel.DateFin,
-                    Patient = patient,
-                    Medicaments = viewModel.Medicaments
+                    MedecinId = viewModel.MedecinId,
+                    Patient = patient
                 };
+
+                var selectedMedicaments = await _context.Medicaments
+                    .Where(m => viewModel.SelectedMedicaments.Contains(m.MedicamentId))
+                    .ToListAsync();
+
+                ordonnance.Medicaments = selectedMedicaments;
 
                 _context.Ordonnances.Add(ordonnance);
                 await _context.SaveChangesAsync();
@@ -408,7 +426,9 @@ namespace ASPBookProject.Controllers
             }
 
             viewModel.Patients = await _context.Patients.ToListAsync();
+            viewModel.Medicaments = await _context.Medicaments.ToListAsync();  
             return View(viewModel);
         }
+
     }
 }

@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace ASPBookProject.Models
 {
     public class OrdonnanceViewModel
@@ -12,6 +9,8 @@ namespace ASPBookProject.Models
         public DateTime DateFin { get; set; }
         public List<Medicament> Medicaments { get; set; } = new List<Medicament>();
         public List<Patient> Patients { get; set; } = new List<Patient>();
+        public List<int> SelectedMedicaments { get; set; } = new List<int>();
+
         public string? MedecinId { get; set; }
     }
 }

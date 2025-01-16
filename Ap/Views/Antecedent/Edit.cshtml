@@ -1,0 +1,53 @@
+@model ASPBookProject.ViewModels.AntecedentEditViewModel
+
+@{
+    Layout = "_Layout";
+}
+
+<div class="container mt-4">
+    <h1>@ViewData["Title"]</h1>
+
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="Antecedent.AntecedentId" />
+
+        <div class="mb-3">
+            <label asp-for="Nom" class="form-label">Nom</label>
+            <input asp-for="Nom" class="form-control" />
+            <span asp-validation-for="Nom" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Médicaments associés</label>
+            <div>
+                @foreach (var medicament in Model.Medicaments)
+                {
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="medicament_@medicament.MedicamentId" name="SelectedMedicamentIds" value="@medicament.MedicamentId" @(Model.SelectedMedicamentIds.Contains(medicament.MedicamentId) ? "checked" : "") />
+                        <label class="form-check-label" for="medicament_@medicament.MedicamentId">@medicament.Nom</label>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Patients associés</label>
+            <div>
+                @foreach (var patient in Model.Patients)
+                {
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="patient_@patient.PatientId" name="SelectedPatientIds" value="@patient.PatientId" @(Model.SelectedPatientIds.Contains(patient.PatientId) ? "checked" : "") />
+                        <label class="form-check-label" for="patient_@patient.PatientId">@patient.Nom</label>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+            <a asp-action="Index" class="btn btn-secondary">Annuler</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
