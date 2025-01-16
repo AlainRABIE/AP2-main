@@ -28,7 +28,7 @@ namespace ASPBookProject.Controllers
             return View();
         }
 
-        // [HttpGet]
+        // [HtpGet]
         // public async Task<IActionResult> EditProfil()
         // {
         //     var user = await _userManager.GetUserAsync(User);
