@@ -155,19 +155,19 @@ namespace ASPBookProject.Controllers
                 return NotFound();
             }
 
-            var viewModel = new OrdonnanceViewModel
-            {
-                OrdonnanceId = ordonnance.OrdonnanceId,
-                PatientId = ordonnance.PatientId,
-                Patologie = ordonnance.Patologie,
-                DateDébut = ordonnance.DateDébut,
-                DateFin = ordonnance.DateFin,
-                MedecinId = ordonnance.MedecinId,
-                Patients = await _context.Patients.ToListAsync(),
-            };
+        //     var viewModel = new OrdonnanceViewModel
+        //     {
+        //         OrdonnanceId = ordonnance.OrdonnanceId,
+        //         PatientId = ordonnance.PatientId,
+        //         Patologie = ordonnance.Patologie,
+        //         DateDébut = ordonnance.DateDébut,
+        //         DateFin = ordonnance.DateFin,
+        //         MedecinId = ordonnance.MedecinId,
+        //         Patients = await _context.Patients.ToListAsync(),
+        //     };
 
-            return View(viewModel);
-        }
+        //     return View(viewModel);
+        // }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
